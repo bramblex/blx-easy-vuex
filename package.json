@@ -1,0 +1,22 @@
+{
+  "name": "easy-vuex",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:bramblex/easy-vuex.git",
+  "author": "乔健 <qjnight@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "vuex": "^3.0.1"
+  },
+  "dependencies": {
+    "@babel/core": "^7.0.0-rc.1",
+    "@babel/preset-env": "^7.0.0-rc.1",
+    "rollup": "^0.64.1",
+    "rollup-plugin-babel": "^4.0.0-beta.8"
+  },
+  "scripts": {
+    "dev": "./node_modules/.bin/rollup -c rollup.config.js --watch",
+    "build": "./node_modules/.bin/rollup -c rollup.config.js",
+    "test": "node test/test.js"
+  }
+}
