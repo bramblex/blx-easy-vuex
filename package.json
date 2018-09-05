@@ -1,7 +1,7 @@
 {
   "name": "blx-easy-vuex",
-  "version": "0.0.4",
-  "main": "dist/blx-easy-vuex.js",
+  "version": "0.1.0",
+  "main": "dist/blx-easy-vuex.umd.js",
   "repository": "git@github.com:bramblex/easy-vuex.git",
   "author": "乔健 <qjnight@gmail.com>",
   "license": "MIT",
