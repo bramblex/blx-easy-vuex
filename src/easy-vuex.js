@@ -1,19 +1,19 @@
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
-function extend(store, is_root = false) {
+function extend(store) {
 
     // 递归 extend 每个模块
     const modules = {}
     for (const [name, module] of Object.entries(store.modules || {})) {
-        modules[name] = EasyStore.extend(module, false)
+        modules[name] = extend(module, false)
     }
 
     return {
         ...store,
 
         // 强制全部加上 namespace
-        namespace: is_root ? false : true,
+        namespaced: true,
 
         // 添加默认 Mutation
         mutations: {
@@ -23,33 +23,25 @@ function extend(store, is_root = false) {
             ...store.mutations
         },
 
-        // 添加默认 Action
-        actions: {
-            easyVuexModify(context, payload) {
-                context.commit('EASY_VUEX_MODIFY', payload)
-            },
-            ...store.actions
-        },
-
         modules
     }
 }
 
 function beforeCreate() {
 
-    const easy_vuex = this.$options.easy_vuex
+    const easyMapState = this.$options.easyMapState
 
     // 获取配置
     let fields
-    if (!easy_vuex) {
+    if (!easyMapState) {
         return
-    } else if (Array.isArray(easy_vuex)) {
-        fields = easy_vuex.map((path) => {
+    } else if (Array.isArray(easyMapState)) {
+        fields = easyMapState.map((path) => {
             const name = path.split('/').pop()
             return [name, path]
         })
     } else {
-        fields = Object.entries(easy_vuex || {})
+        fields = Object.entries(easyMapState || {})
     }
 
     if (!this.$options.computed) this.$options.computed = {}
@@ -61,16 +53,18 @@ function beforeCreate() {
         const namespace = _path.join('/') || null
 
         // 获取 getter 和 setter 函数
-        let getter
-        if (namespace) {
-            getter = mapState(namespace, { '_temp': name })['_temp']
-            modify = mapActions(namespace, { '_temp': 'easyVuexModify' })['_temp']
-        }
+        const getter = namespace
+            ? mapState(namespace, { '_temp': name })['_temp']
+            : mapState({ '_temp': name })['_temp']
+
+        const modify = namespace
+            ? mapMutations(namespace, { '_temp': 'EASY_VUEX_MODIFY' })['_temp']
+            : mapMutations({ '_temp': 'EASY_VUEX_MODIFY' })['_temp']
 
         // 创建 computed
         this.$options.computed[alias] = {
             get: getter,
-            set: function (value) { return modify.apply(this, { name, value }) }
+            set: function (value) { return modify.apply(this, [{ name, value }]) }
         }
 
     }

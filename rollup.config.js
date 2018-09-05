@@ -9,7 +9,8 @@ export default {
         format: 'umd',
         globals: {
             vuex: 'Vuex',
-        }
+        },
+        external: [ 'vuex' ]
     },
     plugins: [
         babel(),

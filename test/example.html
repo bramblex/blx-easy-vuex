@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex"></script>
+    <script src="../dist/easy-vuex.umd.js"></script>
+
+    <div id="app">
+        <div>{{ count }}</div>
+        <input v-model="count" />
+
+        <hr />
+        <div>{{ msg }}</div>
+        <input v-model="msg" />
+
+        <hr />
+        <div>{{ next }}</div>
+        <input v-model="next" />
+
+
+    </div>
+
+    <script>
+        Vue.use(Vuex)
+        Vue.use(EasyVuex)
+
+        const store = {
+            state: {
+                count: 0
+            },
+
+            modules: {
+                fuck: {
+                    state: { msg: 'hello' },
+
+                    modules: {
+                        fuck_next: {
+                            state: {
+                                next: 'next'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        const easyStore = EasyVuex.extend(store)
+
+        const vm = new Vue({
+            el: '#app',
+            store: new Vuex.Store(easyStore),
+
+            easyMapState: {
+                count: 'count',
+                msg: 'fuck/msg',
+                next: 'fuck/fuck_next/next'
+            },
+
+        })
+
+    </script>
+</body>
+
+</html>

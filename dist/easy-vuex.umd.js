@@ -77,7 +77,6 @@
   }
 
   function extend(store) {
-    var is_root = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     // 递归 extend 每个模块
     var modules = {};
 
@@ -88,12 +87,12 @@
           name = _arr$_i[0],
           module = _arr$_i[1];
 
-      modules[name] = EasyStore.extend(module, false);
+      modules[name] = extend(module, false);
     }
 
     return _objectSpread({}, store, {
       // 强制全部加上 namespace
-      namespace: is_root ? false : true,
+      namespaced: true,
       // 添加默认 Mutation
       mutations: _objectSpread({
         EASY_VUEX_MODIFY: function EASY_VUEX_MODIFY(state, _ref) {
@@ -102,12 +101,6 @@
           state[name] = value;
         }
       }, store.mutations),
-      // 添加默认 Action
-      actions: _objectSpread({
-        easyVuexModify: function easyVuexModify(context, payload) {
-          context.commit('EASY_VUEX_MODIFY', payload);
-        }
-      }, store.actions),
       modules: modules
     });
   }
@@ -115,19 +108,19 @@
   function beforeCreate() {
     var _this = this;
 
-    var easy_vuex = this.$options.easy_vuex; // 获取配置
+    var easyMapState = this.$options.easyMapState; // 获取配置
 
     var fields;
 
-    if (!easy_vuex) {
+    if (!easyMapState) {
       return;
-    } else if (Array.isArray(easy_vuex)) {
-      fields = easy_vuex.map(function (path) {
+    } else if (Array.isArray(easyMapState)) {
+      fields = easyMapState.map(function (path) {
         var name = path.split('/').pop();
         return [name, path];
       });
     } else {
-      fields = Object.entries(easy_vuex || {});
+      fields = Object.entries(easyMapState || {});
     }
 
     if (!this.$options.computed) this.$options.computed = {}; // 循环创建双向绑定
@@ -148,25 +141,24 @@
 
         var namespace = _path.join('/') || null; // 获取 getter 和 setter 函数
 
-        var getter = void 0;
-
-        if (namespace) {
-          getter = vuex.mapState(namespace, {
-            '_temp': name
-          })['_temp'];
-          modify = vuex.mapActions(namespace, {
-            '_temp': 'easyVuexModify'
-          })['_temp'];
-        } // 创建 computed
-
+        var getter = namespace ? vuex.mapState(namespace, {
+          '_temp': name
+        })['_temp'] : vuex.mapState({
+          '_temp': name
+        })['_temp'];
+        var modify = namespace ? vuex.mapMutations(namespace, {
+          '_temp': 'EASY_VUEX_MODIFY'
+        })['_temp'] : vuex.mapMutations({
+          '_temp': 'EASY_VUEX_MODIFY'
+        })['_temp']; // 创建 computed
 
         _this.$options.computed[alias] = {
           get: getter,
           set: function set(value) {
-            return modify.apply(this, {
+            return modify.apply(this, [{
               name: name,
               value: value
-            });
+            }]);
           }
         };
       };
