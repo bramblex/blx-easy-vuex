@@ -1,5 +1,5 @@
 
-const EasyVuex = require('../dist/easy-vuex.umd')
+const BLXEasyVuex = require('../dist/blx-easy-vuex.umd')
 
 const store_config = {
     state: { count: 0 },
@@ -17,6 +17,6 @@ const store_config = {
     }
 }
 
-const new_store_config = EasyVuex.extend(store_config)
+const new_store_config = BLXEasyVuex.extend(store_config)
 
 console.log(new_store_config)

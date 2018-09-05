@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('vuex')) :
   typeof define === 'function' && define.amd ? define(['vuex'], factory) :
-  (global.EasyVuex = factory(global.Vuex));
+  (global.BLXEasyVuex = factory(global.Vuex));
 }(this, (function (vuex) { 'use strict';
 
   function _defineProperty(obj, key, value) {
@@ -188,11 +188,11 @@
     });
   }
 
-  var easyVuex = {
+  var blxEasyVuex = {
     install: install,
     extend: extend
   };
 
-  return easyVuex;
+  return blxEasyVuex;
 
 })));
