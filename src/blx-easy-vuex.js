@@ -1,5 +1,5 @@
 
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, Store as VuexStore } from 'vuex'
 
 function extend(store) {
 
@@ -71,6 +71,19 @@ function beforeCreate() {
 
 }
 
-function install(Vue) { Vue.mixin({ beforeCreate }) }
+function install(Vue) {
+    Vue.mixin({ beforeCreate })
+}
 
-export default { install, extend }
+class Store extends VuexStore {
+    constructor(store) {
+        super(extend(store))
+    }
+}
+
+// 遵循 Vue 的标准，如果有 window.Vue 则自动 use
+if (typeof window && window.Vue) {
+    Vue.use({ install })
+}
+
+export default { install, extend, Store }

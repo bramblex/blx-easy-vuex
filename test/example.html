@@ -30,8 +30,6 @@
     </div>
 
     <script>
-        Vue.use(Vuex)
-        Vue.use(BLXEasyVuex)
 
         const store = {
             state: {
@@ -53,11 +51,9 @@
             }
         }
 
-        const easyStore = BLXEasyVuex.extend(store)
-
         const vm = new Vue({
             el: '#app',
-            store: new Vuex.Store(easyStore),
+            store: new BLXEasyVuex.Store(store),
 
             easyMapState: {
                 count: 'count',
