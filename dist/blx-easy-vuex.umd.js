@@ -270,7 +270,7 @@
   }(vuex.Store); // 遵循 Vue 的标准，如果有 window.Vue 则自动 use
 
 
-  if ((typeof window === "undefined" ? "undefined" : _typeof(window)) && window.Vue) {
+  if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === 'object' && window.Vue && typeof window.Vue.use === 'function') {
     Vue.use({
       install: install
     });
